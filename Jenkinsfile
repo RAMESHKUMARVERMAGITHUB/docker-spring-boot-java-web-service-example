@@ -27,8 +27,9 @@ pipeline{
         stage("Sonarqube Analysis "){
             steps{
                 withSonarQubeEnv('sonar-server') {
-                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=docker-spring-boot-java-web-service \
-                    -Dsonar.projectKey=docker-spring-boot-java-web-service'''
+                    // sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=docker-spring-boot-java-web-service \
+                    // -Dsonar.projectKey=docker-spring-boot-java-web-service'''
+                    sh 'mvn sonar:sonar -Dsonar.projectName=docker-spring-boot-java-web-service -Dsonar.projectKey=docker-spring-boot-java-web-service '
                 }
             }
         }

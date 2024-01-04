@@ -15,14 +15,14 @@ pipeline{
         }
         stage('Checkout from Git'){
             steps{
-                git branch: 'main', url: 'https://github.com/Aj7Ay/Hostit.git'
+                git branch: 'main', url: 'https://github.com/RAMESHKUMARVERMAGITHUB/docker-spring-boot-java-web-service-example.git'
             }
         }
         stage("Sonarqube Analysis "){
             steps{
                 withSonarQubeEnv('sonar-server') {
-                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=hostit \
-                    -Dsonar.projectKey=hostit'''
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=docker-spring-boot-java-web-service \
+                    -Dsonar.projectKey=docker-spring-boot-java-web-service'''
                 }
             }
         }
@@ -53,23 +53,23 @@ pipeline{
             steps{
                 script{
                   withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){
-                      sh "docker build -t rameshkumarverma/hostit:latest ."
-                      // sh "docker tag uber rameshkumarverma/hostit:latest "
-                      sh "docker push rameshkumarverma/hostit:latest"
+                      sh "docker build -t rameshkumarverma/docker-spring-boot-java-web-service:latest ."
+                      // sh "docker tag uber rameshkumarverma/docker-spring-boot-java-web-service:latest "
+                      sh "docker push rameshkumarverma/docker-spring-boot-java-web-service:latest"
                     }
                 }
             }
         }
         stage("TRIVY"){
             steps{
-                sh "trivy image rameshkumarverma/hostit:latest > trivyimage.txt"
+                sh "trivy image rameshkumarverma/docker-spring-boot-java-web-service:latest > trivyimage.txt"
             }
         }
         stage("deploy_docker"){
             steps{
                 sh "docker volume create nexus-data"
-                // sh "docker run -d --name host -p 8081:8081 rameshkumarverma/hostit:latest"
-                sh "docker run -d --name nexus -p 8081:8081 --mount source=nexus-data,target=/nexus-data sonatype/nexus3"
+                sh "docker run -d --name docker-spring-boot-java-web-service -p 8080:8080 rameshkumarverma/docker-spring-boot-java-web-service:latest"
+                
             }
         }
         // stage("Deploy"){

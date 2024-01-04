@@ -15,8 +15,12 @@ pipeline{
         }
         stage('Checkout from Git'){
             steps{
-                git branch: 'main', url: 'https://github.com/RAMESHKUMARVERMAGITHUB/docker-spring-boot-java-web-service-example.git'
+                git branch: 'master', url: 'https://github.com/RAMESHKUMARVERMAGITHUB/docker-spring-boot-java-web-service-example.git'
             }
+        }
+        stage('build code'){
+            steps{
+                sh 'mvn clean install'
         }
         stage("Sonarqube Analysis "){
             steps{
@@ -67,7 +71,6 @@ pipeline{
         }
         stage("deploy_docker"){
             steps{
-                sh "docker volume create nexus-data"
                 sh "docker run -d --name docker-spring-boot-java-web-service -p 8080:8080 rameshkumarverma/docker-spring-boot-java-web-service:latest"
                 
             }
